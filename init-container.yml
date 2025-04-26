@@ -1,0 +1,17 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: init-cont-test
+  namespace: init-sidecar-ns
+
+spec:
+  initContainers:
+  - name: init-cont 
+    image: busybox:latest
+    command: ["sh", "-c", "echo 'Initialization started....' sleep 5; 'Initialization completed!'"]    
+
+  containers:
+  - name: main-cont
+    image: httpd:latest
+    ports:
+    - containerPort: 8080
