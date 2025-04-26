@@ -1,0 +1,25 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: sidecar-cont-test
+  namespace: init-sidecar-ns
+
+spec:
+  containers:
+  - name: main-cont
+    image: busybox:latest
+    command: ["sh", "-c", "while true; do echo 'Hello World' >> /var/log/app.log; sleep 3; done;"]
+    volumeMounts:
+      - name: shared-logs
+        mountPath: /var/log/
+
+  - name: sidecar-cont
+    image: busybox:latest
+    command: ["sh", "-c", "tail -f /var/log/app.log"]
+    volumeMounts:
+      - name: shared-logs
+        mountPath: /var/log/
+
+  volumes:
+    - name: shared-logs
+      emptyDir: {}
